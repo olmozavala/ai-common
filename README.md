@@ -14,9 +14,3 @@ git submodule add git@github.com:olmozavala/ai_common.git ai_common
 ```shell
 git submodule update --init --recursive
 ```
-3. Include the proper paths in your python files
-```python
-import sys
-sys.path.append("ai_common/")
-```
-4. Depending on the IDE you are using you also need to include the `ai_common`.
