@@ -1,7 +1,7 @@
 import tensorflow.keras.callbacks as callbacks
 from tensorflow.keras.utils import plot_model
 from tensorflow.keras.optimizers import *
-# from preproc.constants import NormParams
+from constants.AI_params import NormParams
 from pandas import DataFrame
 import pandas as pd
 
@@ -197,20 +197,20 @@ def save_splits(file_name, train_ids, val_ids, test_ids):
     info_splits.to_csv(file_name, index=None)
 
 
-# def save_norm_params(file_name, norm_type, scaler):
-#     print("Saving normalization parameters....")
-# 
-#     if norm_type == NormParams.min_max:
-#         file = open(file_name, 'w')
-#         min_val = scaler.data_min_
-#         max_val = scaler.data_max_
-#         scale = scaler.scale_
-#         range = scaler.data_range_
-# 
-#         file.write(F"Normalization type: {norm_type}, min: {min_val}, max: {max_val}, range: {range}, scale: {scale}")
-#         file.close()
-#     else:
-#         print(F"WARNING! The normalization type {norm_type} is unknown!")
+def save_norm_params(file_name, norm_type, scaler):
+    print("Saving normalization parameters....")
+
+    if norm_type == NormParams.min_max:
+        file = open(file_name, 'w')
+        min_val = scaler.data_min_
+        max_val = scaler.data_max_
+        scale = scaler.scale_
+        range = scaler.data_range_
+
+        file.write(F"Normalization type: {norm_type}, min: {min_val}, max: {max_val}, range: {range}, scale: {scale}")
+        file.close()
+    else:
+        print(F"WARNING! The normalization type {norm_type} is unknown!")
 
 def save_model_params(file_name, params_dic):
     file = open(file_name, 'w')

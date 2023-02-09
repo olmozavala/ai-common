@@ -78,6 +78,9 @@ class TrainingParams(Enum):
     # ============ These parameters are for 1D approximation ============
     file_name = 30
 
+class NormParams(Enum):
+    min_max = 1
+    mean_zero = 2
 class ClassificationParams(Enum):
     input_folder = 1  # Where the images are stored
     output_folder = 2  # Where to store the segmented contours
@@ -112,6 +115,11 @@ class VisualizationResultsParams(Enum):
     nn_output =  2
     nn_metrics =  3
 
+class CNNTypes(Enum):
+    TwoD = 1
+    ThreeD = 2
+
+# ================= From original code related to Medical imaging, may be deprecatded ==========
 class SubstractionParams(Enum):
     # This is what is being used to compute TZ. It uses two contours, compute the difference and obtain its DSC
     model_weights_file = 0
@@ -122,6 +130,3 @@ class ClassificationMetrics(Enum):
     DSC_2D = '2D_DSC'  # DSC in 3D
     MSE = 'MSE'
 
-class CNNTypes(Enum):
-    TwoD = 1
-    ThreeD = 2
