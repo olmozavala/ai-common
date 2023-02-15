@@ -67,6 +67,7 @@ class TrainingParams(Enum):
     config_name = 14  # A name that allows you to identify the configuration of this training
     optimizer = 15
     data_augmentation = 16
+    normalization_type = 17
     # ============ These parameters are for images (2D or 3D) ============
     output_imgs_folder = 50  # Where to store intermediate images
     show_imgs = 4  # If we want to display the images while are being generated (for PyCharm)
@@ -81,6 +82,7 @@ class TrainingParams(Enum):
 class NormParams(Enum):
     min_max = 1
     mean_zero = 2
+
 class ClassificationParams(Enum):
     input_folder = 1  # Where the images are stored
     output_folder = 2  # Where to store the segmented contours

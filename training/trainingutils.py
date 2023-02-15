@@ -1,7 +1,7 @@
 import tensorflow.keras.callbacks as callbacks
 from tensorflow.keras.utils import plot_model
 from tensorflow.keras.optimizers import *
-from constants.AI_params import NormParams
+from ai_common.constants.AI_params import NormParams
 from pandas import DataFrame
 import pandas as pd
 
@@ -207,7 +207,16 @@ def save_norm_params(file_name, norm_type, scaler):
         scale = scaler.scale_
         range = scaler.data_range_
 
-        file.write(F"Normalization type: {norm_type}, min: {min_val}, max: {max_val}, range: {range}, scale: {scale}")
+        file.write(F"Normalization type: MIN_MAX, min: {min_val}, max: {max_val}, range: {range}, scale: {scale}")
+        file.close()
+    elif norm_type == NormParams.mean_zero:
+        file = open(file_name, 'w')
+        mean = scaler.mean_
+        scale = scaler.scale_
+        sigma = scaler.var_
+
+        file.write(F"Normalization type, mean, var, scale\n")
+        file.write(F"MEAN_ZERO, {' '.join([str(x) for x in mean])}, {' '.join([str(x) for x in sigma])},{' '.join([str(x) for x in scale])}")
         file.close()
     else:
         print(F"WARNING! The normalization type {norm_type} is unknown!")
