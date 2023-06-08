@@ -4,10 +4,17 @@ from tensorflow.keras.optimizers import *
 from ai_common.constants.AI_params import NormParams
 from pandas import DataFrame
 import pandas as pd
+import tensorflow as tf
 
 from ai_common.models.metrics import dice_coef_loss, real_dice_coef
 from os.path import join
 import numpy as np
+
+def scheduler(epoch, lr):
+    if epoch < 30:
+        return lr
+    else:
+        return lr * tf.math.exp(-0.1)
 
 def get_all_callbacks(model_name, early_stopping_func, weights_folder, logs_folder, 
                       learning_mode='auto', patience=50, save_only_best=True):
@@ -42,7 +49,8 @@ def get_all_callbacks(model_name, early_stopping_func, weights_folder, logs_fold
 
     # Early stopping
     stop_callback = callbacks.EarlyStopping(monitor=early_stopping_func, min_delta=.0001, patience=patience, mode=learning_mode)
-    return [logger, save_callback, stop_callback]
+    scheduler_callback = callbacks.LearningRateScheduler(scheduler)
+    return [logger, save_callback, stop_callback, scheduler_callback]
 
 
 def runAndSaveModel(model, X, Y, model_name, epochs, is3d, val_per, early_stopping_func) :
