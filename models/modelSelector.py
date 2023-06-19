@@ -2,12 +2,12 @@ from ai_common.constants.AI_params import *
 import ai_common.models.modelBuilder3D as model_builder_3d
 import ai_common.models.modelBuilder2D as model_builder_2d
 import ai_common.models.modelBuilder1D as model_builder_1d
-from tensorflow.keras.layers import Input
+from tensorflow import keras
 
 def select_3d_model(model_params, last_activation='sigmoid', activation='relu', output_bands=1):
     model_type = model_params[ModelParams.MODEL]
     nn_input_size = model_params[ModelParams.INPUT_SIZE]
-    # Makes a 3D-Unet with three input streams
+    # Makes a 3D-Unet with three keras.Input streams
     if model_type == AiModels.UNET_3D_3_STREAMS or model_type == AiModels.UNET_3D_SINGLE:
         # Reading configuration
         batch_normalization_dec = model_params[ModelParams.BATCH_NORMALIZATION]
@@ -17,11 +17,11 @@ def select_3d_model(model_params, last_activation='sigmoid', activation='relu', 
         filter_size = model_params[ModelParams.FILTER_SIZE]
         # Setting the proper inputs
         if model_type == AiModels.UNET_3D_3_STREAMS:
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1)),
-                      Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1)),
-                      Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1)),
+                      keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1)),
+                      keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1))]
         elif model_type == AiModels.UNET_3D_SINGLE:
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2],  nn_input_size[3]))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2],  nn_input_size[3]))]
         # Building the model
         model = model_builder_3d.make_multistream_3d_unet(inputs, num_filters=start_num_filters,
                                                           filter_size=filter_size,
@@ -46,11 +46,11 @@ def select_3d_model(model_params, last_activation='sigmoid', activation='relu', 
         dense_layers = model_params[ModelParams.NUMBER_DENSE_LAYERS]
         # Setting the proper inputs
         if model_type == AiModels.HALF_UNET_3D_CLASSIFICATION_3_STREAMS:
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1)),
-                      Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1)),
-                      Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1)),
+                      keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1)),
+                      keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1))]
         elif model_type == AiModels.UNET_3D_SINGLE:
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2], 1))]
         # Building the model
         model = model_builder_3d.make_multistream_3d_half_unet_for_classification(inputs,
                                                                                   num_filters=start_num_filters,
@@ -69,13 +69,13 @@ def select_3d_model(model_params, last_activation='sigmoid', activation='relu', 
 def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
     model_type = model_params[ModelParams.MODEL]
     nn_input_size = model_params[ModelParams.INPUT_SIZE]
-    print(F"---------- NN input size {nn_input_size} --------")
+    print(F"---------- NN keras.Input size {nn_input_size} --------")
     # We check if the number of output filter is defined, if not then we default to 1
     if ModelParams.OUTPUT_SIZE in model_params:
         output_filters = model_params[ModelParams.OUTPUT_SIZE]
     else:
         output_filters = 1
-    # Makes half of a 2D-Unet with three input streams
+    # Makes half of a 2D-Unet with three keras.Input streams
     if model_type == AiModels.HALF_UNET_2D_SINGLE_STREAM_CLASSIFICATION:
         # Reading configuration
         batch_normalization = model_params[ModelParams.BATCH_NORMALIZATION]
@@ -87,9 +87,9 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
         dense_layers = model_params[ModelParams.NUMBER_DENSE_LAYERS]
         # Setting the proper inputs
         if len(nn_input_size) == 2:
-            inputs = [Input((nn_input_size[0], nn_input_size[1], 1))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], 1))]
         else:
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
         # Building the model
         model = model_builder_2d.make_multistream_2d_half_unet_for_classification(
             inputs, num_filters=start_num_filters,
@@ -100,7 +100,7 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
             batch_norm=batch_normalization,
             activation=activation,
             dropout=dropout)
-    # Makes a 2D-Unet with a single input streams
+    # Makes a 2D-Unet with a single keras.Input streams
     elif model_type == AiModels.MULTISTREAM_CNN_RNN:
         # Reading configuration
         batch_normalization = model_params[ModelParams.BATCH_NORMALIZATION]
@@ -109,7 +109,7 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
         number_levels = model_params[ModelParams.NUMBER_LEVELS]
         filter_size = model_params[ModelParams.FILTER_SIZE]
         # Setting the proper inputs
-        inputs = [Input((nn_input_size[0], nn_input_size[1], 1)) for x in range(nn_input_size[2])]
+        inputs = [keras.Input((nn_input_size[0], nn_input_size[1], 1)) for x in range(nn_input_size[2])]
         # Building the model
         model = model_builder_2d.make_multistream_cnn_rnn(
             inputs,
@@ -123,7 +123,7 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
             last_activation=last_activation,
             activation=activation,
             number_output_filters=output_filters)
-    # Makes a 2D-Unet with a single input streams
+    # Makes a 2D-Unet with a single keras.Input streams
     elif model_type == AiModels.UNET_2D_SINGLE:
         # Reading configuration
         batch_normalization = model_params[ModelParams.BATCH_NORMALIZATION]
@@ -133,9 +133,9 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
         filter_size = model_params[ModelParams.FILTER_SIZE]
         # Setting the proper inputs
         if len(nn_input_size) == 2: # In this case we only have a 2D matrix so we need to add the addional dimension
-            inputs = [Input((nn_input_size[0], nn_input_size[1], 1))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], 1))]
         elif len(nn_input_size) == 3: # In this case we do have the 3 dimensions
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
         # Building the model
         model = model_builder_2d.make_multistream_2d_unet(
             inputs,
@@ -160,9 +160,9 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
         inc_res_factor = model_params[ModelParams.INC_RES_FACTOR]
         # Setting the proper inputs
         if len(nn_input_size) == 2: # In this case we only have a 2D matrix so we need to add the addional dimension
-            inputs = [Input((nn_input_size[0], nn_input_size[1], 1))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], 1))]
         elif len(nn_input_size) == 3: # In this case we do have the 3 dimensions
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
         # Building the model
         model = model_builder_2d.make_multistream_2d_unet_superresolution(
             inputs,
@@ -183,9 +183,9 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
         dropout = model_params[ModelParams.DROPOUT]
         # Setting the proper inputs
         if len(nn_input_size) == 2: # In this case we only have a 2D matrix so we need to add the addional dimension
-            inputs = [Input((nn_input_size[0], nn_input_size[1], 1))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], 1))]
         elif len(nn_input_size) == 3: # In this case we do have the 3 dimensions
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
         # Building the model
         model = model_builder_2d.make_SRCNN( inputs, batch_norm=batch_normalization, dropout=dropout,
                                     last_activation=last_activation, activation=activation, number_output_filters=output_filters)
@@ -199,9 +199,9 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
         inc_res_factor = model_params[ModelParams.INC_RES_FACTOR]
         # Setting the proper inputs
         if len(nn_input_size) == 2: # In this case we only have a 2D matrix so we need to add the addional dimension
-            inputs = [Input((nn_input_size[0], nn_input_size[1], 1))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], 1))]
         elif len(nn_input_size) == 3: # In this case we do have the 3 dimensions
-            inputs = [Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
+            inputs = [keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))]
         # Building the model
         model = model_builder_2d.make_pre_upsampling_super_resolution(
             inputs,
@@ -222,7 +222,7 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
         number_levels = model_params[ModelParams.NUMBER_LEVELS]
         filter_size = model_params[ModelParams.FILTER_SIZE]
         # Setting the proper inputs
-        inputs = [Input((nn_input_size[0], nn_input_size[1], 1)) for x in range(nn_input_size[2])]
+        inputs = [keras.Input((nn_input_size[0], nn_input_size[1], 1)) for x in range(nn_input_size[2])]
         # Building the model
         model = model_builder_2d.make_multistream_2d_unet(
             inputs,
@@ -245,9 +245,9 @@ def select_2d_model(model_params, last_activation='sigmoid', activation='relu'):
         num_layers = model_params[ModelParams.NUMBER_DENSE_LAYERS]
         # Setting the proper inputs
         if len(nn_input_size) == 2: # In this case we only have a 2D matrix so we need to add the addional dimension
-            inputs = Input((nn_input_size[0], nn_input_size[1], 1))
+            inputs = keras.Input((nn_input_size[0], nn_input_size[1], 1))
         elif len(nn_input_size) == 3: # In this case we do have the 3 dimensions
-            inputs = Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))
+            inputs = keras.Input((nn_input_size[0], nn_input_size[1], nn_input_size[2]))
 
         # Building the model
         model = model_builder_2d.make_dense_cnn( inputs,
@@ -279,7 +279,7 @@ def select_1d_model(model_params):
         activation_hidden = model_params[ModelParams.ACTIVATION_HIDDEN_LAYERS]
         activation_output = model_params[ModelParams.ACTIVATION_OUTPUT_LAYERS]
         # Setting the proper inputs
-        inputs = Input(shape=(input_size,))
+        inputs = keras.Input(shape=(input_size,))
         # Building the model
         model = model_builder_1d.single_multlayer_perceptron( inputs, number_hidden_layers,
                                                               cells_per_hidden_layer,

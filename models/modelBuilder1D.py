@@ -1,5 +1,8 @@
-from tensorflow.keras.layers import *
-from tensorflow.keras.models import Model
+import tensorflow as tf
+from tensorflow.keras.layers import Dense, BatchNormalization, Dropout, Input
+from tensorflow.keras import Model
+
+
 
 def single_multlayer_perceptron(input, number_hidden_layers, cells_per_hidden_layer, output_layer_size,
                                 batch_norm=False, dropout=False,
