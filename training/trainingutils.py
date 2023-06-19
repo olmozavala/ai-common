@@ -10,6 +10,9 @@ from ai_common.models.metrics import dice_coef_loss, real_dice_coef
 from os.path import join
 import numpy as np
 
+import pickle
+
+
 def scheduler(epoch, lr):
     if epoch < 30:
         return lr
@@ -226,6 +229,12 @@ def save_norm_params(file_name, norm_type, scaler):
         file.write(F"Normalization type, mean, var, scale\n")
         file.write(F"MEAN_ZERO, {' '.join([str(x) for x in mean])}, {' '.join([str(x) for x in sigma])},{' '.join([str(x) for x in scale])}")
         file.close()
+        print('Storing the Scaler object...')
+        with open(scaler.path_file, 'wb') as f: #scaler.path_file must be defined during training.
+            pickle.dump(scaler, f)
+
+        print(f'Scaler object successfully saved to: {scaler.path_file}')
+
     else:
         print(F"WARNING! The normalization type {norm_type} is unknown!")
 
