@@ -100,7 +100,8 @@ def split_train_and_test(num_examples, test_percentage):
     return [train_val_idxs, test_idxs]
 
 
-def split_train_validation_and_test(num_examples, val_percentage, test_percentage, shuffle_ids=True):
+def split_train_validation_and_test(num_examples, val_percentage, test_percentage, 
+                                    shuffle_ids=True, file_name = ''):
     """
     Splits a number into training, validation, and test randomly
     :param num_examples: int of the number of examples
@@ -122,6 +123,10 @@ def split_train_validation_and_test(num_examples, val_percentage, test_percentag
     train_idxs.sort()
     val_idxs.sort()
     test_idxs.sort()
+
+    if file_name != '':
+        save_splits(file_name, train_idxs, val_idxs, test_idxs)
+
 
     return [train_idxs, val_idxs, test_idxs]
 
