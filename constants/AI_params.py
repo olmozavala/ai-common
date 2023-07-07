@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class AiModels(Enum):
     # ====== UNET ============
     UNET_3D_SINGLE = 3
